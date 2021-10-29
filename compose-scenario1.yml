@@ -1,0 +1,36 @@
+version: '2'
+services:
+  mariadb:
+    image: docker.io/bitnami/mariadb:10.3
+    volumes:
+      - 'mariadb_data:/bitnami/mariadb'
+    environment:
+      - MARIADB_USER=bn_ghost
+      - MARIADB_ROOT_PASSWORD=vmw@r3
+      - MARIADB_PASSWORD=vmw@r3
+      - MARIADB_DATABASE=bitnami_ghost
+  ghost:
+    image: docker.io/bitnami/ghost:4
+    ports:
+      - '8080:5454'
+    volumes:
+      - 'ghost_data:/bitnami/ghost'
+    depends_on:
+      - mariadb
+    environment:
+      - GHOST_USERNAME=vmware
+      - GHOST_PASSWORD=vmw@r3p455w0rd
+      - GHOST_EMAIL=vmware@vmware.com
+      - GHOST_DATABASE_HOST=mariadb
+      - GHOST_DATABASE_PORT_NUMBER=3306
+      - GHOST_DATABASE_USER=bn_ghost
+      - GHOST_DATABASE_NAME=bitnami_ghost
+      - GHOST_DATABASE_PASSWORD=vmw@r3
+      - GHOST_BLOG_TITLE=VMware Blog
+      - GHOST_PORT_NUMBER=5454
+      - GHOST_EXTERNAL_HTTP_PORT_NUMBER=8080
+volumes:
+  mariadb_data:
+    driver: local
+  ghost_data:
+    driver: local
