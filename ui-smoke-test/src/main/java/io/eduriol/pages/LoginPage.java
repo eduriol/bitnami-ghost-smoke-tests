@@ -6,6 +6,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -20,7 +21,11 @@ public class LoginPage {
 
     public void load(String url) throws InterruptedException, TimeoutException {
         WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
+        ChromeOptions chromeOptions = new ChromeOptions();
+        chromeOptions.addArguments("--no-sandbox");
+        chromeOptions.addArguments("--headless");
+        chromeOptions.addArguments("disable-gpu");
+        driver = new ChromeDriver(chromeOptions);
         int tries = 0;
         while (!driver.getTitle().contains("Sign In - ")) {
             if (tries > 15) {
