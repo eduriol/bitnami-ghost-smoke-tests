@@ -9,8 +9,8 @@ public class GhostUITest {
 
     public static void main(String[] args) throws InterruptedException, TimeoutException {
         LoginPage loginPage = new LoginPage();
-        loginPage.load("http://localhost:8080/ghost/#/signin");
-        DashboardPage dashboardPage = loginPage.login("vmware@vmware.com", "vmw@r3p455w0rd");
+        loginPage.load("http://localhost:" + System.getenv("PORT") + "/ghost/#/signin");
+        DashboardPage dashboardPage = loginPage.login(System.getenv("EMAIL"), System.getenv("PASSWORD"));
         if (dashboardPage.isLoaded()) {
             dashboardPage.close();
             System.exit(0);

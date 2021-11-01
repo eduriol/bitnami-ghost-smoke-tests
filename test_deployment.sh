@@ -12,10 +12,10 @@ file_does_not_exist() {
 
 CONTAINER_PREFIX=$(basename $PWD)
 
-if [ -z $1 ]
+if [[ -z $1 ]]
 then
     no_filename
-elif [ ! -f $1 ]
+elif [[ ! -f $1 ]]
 then
     file_does_not_exist
 else
@@ -49,6 +49,17 @@ else
 
     # Smoke Test 2: Log in the Ghost application
     # The test is implemented in Java 11 in the ./ui-smoke-test dir
+
+    # Parse user mail, password and port from compose file
+    export EMAIL=$(grep "GHOST_EMAIL=" $1 | sed -e "s/.*=//")
+    [[ -z "$EMAIL" ]] && EMAIL="user@example.com"
+    export PASSWORD=$(grep "GHOST_PASSWORD=" $1 | sed -e "s/.*=//")
+    [[ -z "$PASSWORD" ]] && PASSWORD="bitnami123"
+    export PORT=$(grep "GHOST_EXTERNAL_HTTP_PORT_NUMBER=" $1 | sed -e "s/.*=//")
+    [[ -z "$PORT" ]] && PORT="80"
+
+    # Launch UI test with Maven and evaluate test exit status
+    # The test will use the previously exported variables
     mvn -f ./ui-smoke-test exec:java -Dexec.mainClass="io.eduriol.GhostUITest"
     if [[ "$?" -eq 0 ]]
     then
@@ -56,7 +67,7 @@ else
     else
         echo "Unable to log in the Ghost UI. Test failed."
         exit 1
-    fi        
+    fi
 fi
 
 exit 0
