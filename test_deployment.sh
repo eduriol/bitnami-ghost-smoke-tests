@@ -46,6 +46,17 @@ else
         echo "MariaDB container is not running. Test failed."
         exit 1
     fi
+
+    # Smoke Test 2: Log in the Ghost application
+    # The test is implemented in Java 11 in the ./ui-smoke-test dir
+    mvn -f ./ui-smoke-test exec:java -Dexec.mainClass="io.eduriol.GhostUITest"
+    if [[ "$?" -eq 0 ]]
+    then
+        echo "Log in the Ghost UI worked. Test successful."
+    else
+        echo "Unable to log in the Ghost UI. Test failed."
+        exit 1
+    fi        
 fi
 
 exit 0
