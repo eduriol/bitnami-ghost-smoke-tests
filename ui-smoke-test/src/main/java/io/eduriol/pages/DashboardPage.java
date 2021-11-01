@@ -19,7 +19,7 @@ public class DashboardPage {
         return driver.getCurrentUrl().endsWith("/ghost/#/dashboard");
     }
 
-    public void close() {
-        driver.close();
+    public void quit() {
+        driver.quit();
     }
 }

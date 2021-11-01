@@ -12,10 +12,10 @@ public class GhostUITest {
         loginPage.load("http://localhost:" + System.getenv("PORT") + "/ghost/#/signin");
         DashboardPage dashboardPage = loginPage.login(System.getenv("EMAIL"), System.getenv("PASSWORD"));
         if (dashboardPage.isLoaded()) {
-            dashboardPage.close();
+            dashboardPage.quit();
             System.exit(0);
         } else {
-            dashboardPage.close();
+            dashboardPage.quit();
             System.exit(1);
         }
     }
