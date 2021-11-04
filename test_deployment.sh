@@ -47,7 +47,30 @@ else
         exit 1
     fi
 
-    # Smoke Test 2: Log in the Ghost application
+    # Smoke Test 2: Apply test queries in database
+    # The test is implemented in Java 11 in the ./db-smoke-test dir
+
+    # Parse db name, user and password from compose file
+    export DB_NAME=$(grep "MARIADB_DATABASE=" $1 | sed -e "s/.*=//")
+    [[ -z "$DB_NAME" ]] && DB_NAME="bitnami_ghost"
+    export DB_USER=$(grep "MARIADB_USER=" $1 | sed -e "s/.*=//")
+    [[ -z "$DB_USER" ]] && DB_USER="bn_ghost"
+    export DB_PASSWORD=$(grep "MARIADB_PASSWORD=" $1 | sed -e "s/.*=//")
+    [[ -z "$DB_PASSWORD" ]] && DB_PASSWORD="dbpassword"
+    
+    # Launch DB test with Maven and evaluate test exit status
+    # The test will use the previously exported variables
+    mvn -f ./db-smoke-test exec:java -Dexec.mainClass="io.eduriol.MariaDBTest"
+    if [[ "$?" -eq 0 ]]
+    then
+        echo "Basic operations were performed in MariaDB. Test successful."
+    else
+        echo "Unable to perform basic operations in MariaDB. Test failed."
+        exit 1
+    fi
+
+
+    # Smoke Test 3: Log in the Ghost application
     # The test is implemented in Java 11 in the ./ui-smoke-test dir
 
     # Parse user mail, password and port from compose file
