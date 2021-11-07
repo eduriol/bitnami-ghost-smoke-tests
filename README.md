@@ -23,8 +23,7 @@ Examples:
 ```
 Two compose configuration files have been attached to the repository as an example. These are the differences with respect to the [original docker-compose.yml file](https://github.com/bitnami/bitnami-docker-ghost/blob/master/docker-compose.yml):
 
-**compose-scenario1.yml**  
-The followings config parameters have been changed:
+**compose-scenario1.yml**: User and Site configuration changes. The followings config parameters have been changed:
 - MARIADB_ROOT_PASSWORD=vmw@r3
 - MARIADB_PASSWORD=vmw@r3
 - GHOST_USERNAME=vmware
@@ -35,8 +34,7 @@ The followings config parameters have been changed:
 - GHOST_PORT_NUMBER=5454
 - GHOST_EXTERNAL_HTTP_PORT_NUMBER=8080
 
-**compose-scenario2.yml**  
-The followings config parameters have been changed:
+**compose-scenario2.yml**: Database connection configuration changes. The followings config parameters have been changed:
 - MARIADB_USER=vmw_ghost
 - MARIADB_DATABASE=vmware_ghost
 - MARIADB_PASSWORD=dbpassword
