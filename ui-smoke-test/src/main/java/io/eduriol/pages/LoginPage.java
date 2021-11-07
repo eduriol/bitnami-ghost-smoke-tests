@@ -28,7 +28,7 @@ public class LoginPage {
         driver = new ChromeDriver(chromeOptions);
         int tries = 0;
         while (!driver.getTitle().contains("Sign In - ")) {
-            if (tries > 15) {
+            if (tries > 35) {
                 throw new TimeoutException("Unable to get login page on time.");
             }
             driver.get(url);
