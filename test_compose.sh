@@ -43,7 +43,7 @@ else
         exit 1
     fi
     # Check MariaDB container
-    MARIADB_CONTAINER_RUNNING=$(docker ps | awk '/_ghost_1/ && /Up/ { print; }' | wc -l)
+    MARIADB_CONTAINER_RUNNING=$(docker ps | awk '/_mariadb_1/ && /Up/ { print; }' | wc -l)
     if [[ "$MARIADB_CONTAINER_RUNNING" -eq 1 ]]
     then
         echo "MariaDB container is running. TEST SUCCESSFUL."
