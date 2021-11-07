@@ -23,7 +23,7 @@ Examples:
 ```
 Two compose configuration files have been attached to the repository as an example. These are the differences with respect to the [original docker-compose.yml file](https://github.com/bitnami/bitnami-docker-ghost/blob/master/docker-compose.yml):
 
-**compose-scenario1.yml**
+**compose-scenario1.yml**  
 The followings config parameters have been changed:
 - MARIADB_ROOT_PASSWORD=vmw@r3
 - MARIADB_PASSWORD=vmw@r3
@@ -35,7 +35,7 @@ The followings config parameters have been changed:
 - GHOST_PORT_NUMBER=5454
 - GHOST_EXTERNAL_HTTP_PORT_NUMBER=8080
 
-**compose-scenario2.yml**
+**compose-scenario2.yml**  
 The followings config parameters have been changed:
 - MARIADB_USER=vmw_ghost
 - MARIADB_DATABASE=vmware_ghost
@@ -46,8 +46,7 @@ The followings config parameters have been changed:
 - GHOST_DATABASE_PASSWORD=dbpassword
 
 ### Reports
-The report showing the result of the smoke tests execution can be seen in the standard output:
-
+The report showing the result of the smoke tests execution can be seen in the standard output.
 
 ### Contribution
 If you'd like to contribute to the project, please send a [Pull Request](https://docs.github.com/en/github/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request) or contact eduriol [at] gmail.com.
