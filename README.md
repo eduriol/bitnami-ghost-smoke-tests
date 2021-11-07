@@ -12,14 +12,14 @@ git clone https://github.com/eduriol/bitnami-ghost-smoke-tests.git
 cd  bitnami-ghost-smoke-tests
 ```
 ### Docker Compose tests
-To test the deployment of Bitnami Ghost using Docker Compose, you need to run the `test_deployment.sh` script, followed by the name of the compose yaml file you want to test. This compose yaml file contains a specific configuration for the Bitnami Ghost application, so the same script can be used to test different configurations:
+To test the deployment of Bitnami Ghost using Docker Compose, you need to run the `test_compose.sh` script, followed by the name of the compose yaml file you want to test. This compose yaml file contains a specific configuration for the Bitnami Ghost application, so the same script can be used to test different configurations:
 ```
-./test_deployment.sh <docker compose file name> 
+./test_compose.sh <docker compose file name> 
 ```
 Examples:
 ```
-./test_deployment.sh compose-scenario1.yml
-./test_deployment.sh compose-scenario2.yml 
+./test_compose.sh compose-scenario1.yml
+./test_compose.sh compose-scenario2.yml 
 ```
 Two compose configuration files have been attached to the repository as an example. These are the differences with respect to the [original docker-compose.yml file](https://github.com/bitnami/bitnami-docker-ghost/blob/master/docker-compose.yml):
 
