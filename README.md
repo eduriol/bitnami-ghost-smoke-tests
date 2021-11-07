@@ -4,6 +4,7 @@ Deployment script and smoke test suite for ensuring the Bitnami Ghost applicatio
 - Docker Engine 20.10.8+
 - Docker Compose 1.29.2+
 - Java 11+
+- Maven 3.6.1+
 - Google Chrome 95+
 ## Run the smoke tests
 As usual, first step is cloning the repo :)

@@ -70,6 +70,7 @@ else
     
     # Launch DB test with Maven and evaluate test exit status
     # The test will use the previously exported variables
+    mvn -f ./db-smoke-test package
     mvn -f ./db-smoke-test exec:java -Dexec.mainClass="io.eduriol.MariaDBTest"
     if [[ "$?" -eq 0 ]]
     then
@@ -98,6 +99,7 @@ else
 
     # Launch UI test with Maven and evaluate test exit status
     # The test will use the previously exported variables
+    mvn -f ./ui-smoke-test package
     mvn -f ./ui-smoke-test exec:java -Dexec.mainClass="io.eduriol.GhostUITest"
     if [[ "$?" -eq 0 ]]
     then
