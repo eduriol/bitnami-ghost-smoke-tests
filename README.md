@@ -3,6 +3,8 @@ Deployment script and smoke test suite for ensuring the Bitnami Ghost applicatio
 ## Requirements
 - Docker Engine 20.10.8+
 - Docker Compose 1.29.2+
+- Helm 3.7.1+
+- Kubernetes & kubectl 1.21.3+
 - Java 11+
 - Maven 3.6.1+
 - Google Chrome 95+
@@ -43,9 +45,12 @@ Two compose configuration files have been attached to the repository as an examp
 - GHOST_DATABASE_USER=vmw_ghost
 - GHOST_DATABASE_NAME=vmware_ghost
 - GHOST_DATABASE_PASSWORD=dbpassword
-
+### Helm Chart tests
+To test the deployment of Bitnami Ghost using Helm Chart, you need to have a Kubernetes cluster and kubectl configurated to use that cluster. After that, run the `test_helm.sh` script. The script already contains a configuration by default so you only need to run:
+```
+./test_helm.sh
+```
 ### Reports
 The report showing the result of the smoke tests execution can be seen in the standard output.
-
 ### Contribution
 If you'd like to contribute to the project, please send a [Pull Request](https://docs.github.com/en/github/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request) or contact eduriol [at] gmail.com.
