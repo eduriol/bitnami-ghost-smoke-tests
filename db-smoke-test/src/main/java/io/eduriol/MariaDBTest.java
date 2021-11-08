@@ -6,7 +6,7 @@ import java.util.concurrent.TimeoutException;
 public class MariaDBTest {
 
     static final String JDBC_DRIVER = "org.mariadb.jdbc.Driver";
-    static final String DB_URL = "jdbc:mariadb://127.0.0.1:3306/" + System.getenv("DB_NAME");
+    static final String DB_URL = "jdbc:mariadb://127.0.0.1:" + System.getenv("DB_PORT") + "/" + System.getenv("DB_NAME");
     static final String USER = System.getenv("DB_USER");
     static final String PASS = System.getenv("DB_PASSWORD");;
 

@@ -20,9 +20,9 @@ then
     file_does_not_exist
 else
     # Tear down the application and delete the volumes if they exist
-    docker-compose -f $1 down
-    docker volume rm ${CONTAINER_PREFIX}_ghost_data
-    docker volume rm ${CONTAINER_PREFIX}_mariadb_data
+    docker-compose -f $1 down &> /dev/null
+    docker volume rm ${CONTAINER_PREFIX}_ghost_data &> /dev/null
+    docker volume rm ${CONTAINER_PREFIX}_mariadb_data &> /dev/null
 
     # Launch application
     docker-compose -f $1 up -d
@@ -37,8 +37,10 @@ else
     GHOST_CONTAINER_RUNNING=$(docker ps | awk '/_ghost_1/ && /Up/ { print; }' | wc -l)
     if [[ "$GHOST_CONTAINER_RUNNING" -eq 1 ]]
     then
+        echo ""
         echo "Ghost container is running. TEST SUCCESSFUL."
     else
+        echo ""
         echo "Ghost container is not running. TEST FAILED."
         exit 1
     fi
@@ -46,8 +48,10 @@ else
     MARIADB_CONTAINER_RUNNING=$(docker ps | awk '/_mariadb_1/ && /Up/ { print; }' | wc -l)
     if [[ "$MARIADB_CONTAINER_RUNNING" -eq 1 ]]
     then
+        echo ""
         echo "MariaDB container is running. TEST SUCCESSFUL."
     else
+        echo ""
         echo "MariaDB container is not running. TEST FAILED."
         exit 1
     fi
@@ -67,15 +71,18 @@ else
     [[ -z "$DB_USER" ]] && DB_USER="bn_ghost"
     export DB_PASSWORD=$(grep "MARIADB_PASSWORD=" $1 | sed -e "s/.*=//")
     [[ -z "$DB_PASSWORD" ]] && DB_PASSWORD="dbpassword"
+    export DB_PORT=3306
     
     # Launch DB test with Maven and evaluate test exit status
     # The test will use the previously exported variables
-    mvn -f ./db-smoke-test package
+    mvn -f ./db-smoke-test package &> /dev/null
     mvn -f ./db-smoke-test exec:java -Dexec.mainClass="io.eduriol.MariaDBTest"
     if [[ "$?" -eq 0 ]]
     then
+        echo ""
         echo "Basic operations were performed in MariaDB. TEST SUCCESSFUL."
     else
+        echo ""
         echo "Unable to perform basic operations in MariaDB. TEST FAILED."
         exit 1
     fi
@@ -99,12 +106,14 @@ else
 
     # Launch UI test with Maven and evaluate test exit status
     # The test will use the previously exported variables
-    mvn -f ./ui-smoke-test package
+    mvn -f ./ui-smoke-test package &> /dev/null
     mvn -f ./ui-smoke-test exec:java -Dexec.mainClass="io.eduriol.GhostUITest"
     if [[ "$?" -eq 0 ]]
     then
+        echo ""
         echo "Log in the Ghost UI worked. TEST SUCCESSFUL."
     else
+        echo ""
         echo "Unable to log in the Ghost UI. TEST FAILED."
         exit 1
     fi
