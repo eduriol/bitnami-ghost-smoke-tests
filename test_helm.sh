@@ -2,10 +2,14 @@
 
 # Define port for Ghost app
 export PORT=8001
+# Define DB port, name and user
+export DB_PORT=3307
+export DB_NAME=bitnami_ghost
+export DB_USER=bn_ghost
 
 # Tear down the application if it is deployed already
-helm delete my-release
-kubectl delete pvc data-my-release-mariadb-0
+helm delete my-release &> /dev/null
+kubectl delete pvc data-my-release-mariadb-0 &> /dev/null
 
 # Get and launch application
 helm repo add bitnami https://charts.bitnami.com/bitnami
@@ -19,7 +23,7 @@ echo "---> Starting execution of Test 1: check pods status"
 echo ""
 # Check Ghost pod
 GHOST_POD_RUNNING=0
-for i in {1..10}
+for i in {1..20}
 do
     GHOST_POD_RUNNING=$(kubectl get pods | awk '/-ghost-/ && /Running/ { print; }' | wc -l)
     if [[ "$GHOST_POD_RUNNING" -eq 0 ]]
@@ -32,13 +36,15 @@ do
 done
 if [[ "$GHOST_POD_RUNNING" -eq 1 ]]
 then
+    echo ""
     echo "Ghost pod is running. TEST SUCCESSFUL."
 else
+    echo ""
     echo "Ghost pod is not running. TEST FAILED."
     exit 1
 fi
 # Check MariaDB pod
-for i in {1..10}
+for i in {1..20}
 do
     MARIADB_POD_RUNNING=$(kubectl get pods | awk '/-mariadb-/ && /Running/ { print; }' | wc -l)
     if [[ "$MARIADB_POD_RUNNING" -eq 0 ]]
@@ -51,39 +57,42 @@ do
 done
 if [[ "$MARIADB_POD_RUNNING" -eq 1 ]]
 then
+    echo ""
     echo "MariaDB pod is running. TEST SUCCESSFUL."
 else
+    echo ""
     echo "MariaDB pod is not running. TEST FAILED."
     exit 1
 fi
 
 # # Smoke Test 2: Apply test queries in database
-# echo ""
-# echo "**************************************************"
-# echo ""
-# echo "---> Starting execution of Test 2: check basic database queries"
-# echo ""
-# # The test is implemented in Java 11 in the ./db-smoke-test dir
+echo ""
+echo "**************************************************"
+echo ""
+echo "---> Starting execution of Test 2: check basic database queries"
+echo ""
+# The test is implemented in Java 11 in the ./db-smoke-test dir
 
-# # Parse db name, user and password from compose file
-# export DB_NAME=$(grep "MARIADB_DATABASE=" $1 | sed -e "s/.*=//")
-# [[ -z "$DB_NAME" ]] && DB_NAME="bitnami_ghost"
-# export DB_USER=$(grep "MARIADB_USER=" $1 | sed -e "s/.*=//")
-# [[ -z "$DB_USER" ]] && DB_USER="bn_ghost"
-# export DB_PASSWORD=$(grep "MARIADB_PASSWORD=" $1 | sed -e "s/.*=//")
-# [[ -z "$DB_PASSWORD" ]] && DB_PASSWORD="dbpassword"
+# Parse db password from Kubernetes secrets
+export DB_PASSWORD=$(kubectl get secret --namespace default my-release-mariadb -o jsonpath="{.data.mariadb-password}" | base64 --decode)
 
-# # Launch DB test with Maven and evaluate test exit status
-# # The test will use the previously exported variables
-# mvn -f ./db-smoke-test package
-# mvn -f ./db-smoke-test exec:java -Dexec.mainClass="io.eduriol.MariaDBTest"
-# if [[ "$?" -eq 0 ]]
-# then
-#     echo "Basic operations were performed in MariaDB. TEST SUCCESSFUL."
-# else
-#     echo "Unable to perform basic operations in MariaDB. TEST FAILED."
-#     exit 1
-# fi
+# Open port for DB test after checking that it is not being used
+pkill -f "kubectl port-forward svc/my-release-mariadb ${DB_PORT}:3306"
+kubectl port-forward svc/my-release-mariadb ${DB_PORT}:3306 &> /dev/null &
+
+# Launch DB test with Maven and evaluate test exit status
+# The test will use the previously exported variables
+mvn -f ./db-smoke-test package &> /dev/null
+mvn -f ./db-smoke-test exec:java -Dexec.mainClass="io.eduriol.MariaDBTest"
+if [[ "$?" -eq 0 ]]
+then
+    echo ""
+    echo "Basic operations were performed in MariaDB. TEST SUCCESSFUL."
+else
+    echo ""
+    echo "Unable to perform basic operations in MariaDB. TEST FAILED."
+    exit 1
+fi
 
 # Open port for UI test after checking that it is not being used
 pkill -f "kubectl port-forward svc/my-release-ghost ${PORT}:80"
@@ -103,12 +112,14 @@ export PASSWORD=$(kubectl get secret --namespace default my-release-ghost -o jso
 
 # Launch UI test with Maven and evaluate test exit status
 # The test will use the previously exported variables
-mvn -f ./ui-smoke-test package
+mvn -f ./ui-smoke-test package &> /dev/null
 mvn -f ./ui-smoke-test exec:java -Dexec.mainClass="io.eduriol.GhostUITest"
 if [[ "$?" -eq 0 ]]
 then
+    echo ""
     echo "Log in the Ghost UI worked. TEST SUCCESSFUL."
 else
+    echo ""
     echo "Unable to log in the Ghost UI. TEST FAILED."
     exit 1
 fi
